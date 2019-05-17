@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 16, 2019 at 01:17 PM
+-- Generation Time: May 17, 2019 at 03:06 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.3
 
@@ -41,7 +41,119 @@ CREATE TABLE `migrations` (
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2014_10_12_000000_create_users_table', 1),
 (2, '2014_10_12_100000_create_password_resets_table', 1),
-(3, '2019_05_16_071515_create_products_table', 1);
+(3, '2016_06_01_000001_create_oauth_auth_codes_table', 1),
+(4, '2016_06_01_000002_create_oauth_access_tokens_table', 1),
+(5, '2016_06_01_000003_create_oauth_refresh_tokens_table', 1),
+(6, '2016_06_01_000004_create_oauth_clients_table', 1),
+(7, '2016_06_01_000005_create_oauth_personal_access_clients_table', 1),
+(8, '2019_05_16_071515_create_products_table', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_access_tokens`
+--
+
+CREATE TABLE `oauth_access_tokens` (
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `client_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `scopes` text COLLATE utf8mb4_unicode_ci,
+  `revoked` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `oauth_access_tokens`
+--
+
+INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
+('f1d1518f1efb815d079af0156492d33dc879f8b8b172cee53f2ccb3f59e23eff78c2e1c12c034d72', 7, 2, NULL, '[]', 0, '2019-05-17 06:49:10', '2019-05-17 06:49:10', '2020-05-17 12:19:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_auth_codes`
+--
+
+CREATE TABLE `oauth_auth_codes` (
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `client_id` int(10) UNSIGNED NOT NULL,
+  `scopes` text COLLATE utf8mb4_unicode_ci,
+  `revoked` tinyint(1) NOT NULL,
+  `expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_clients`
+--
+
+CREATE TABLE `oauth_clients` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `redirect` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `personal_access_client` tinyint(1) NOT NULL,
+  `password_client` tinyint(1) NOT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `oauth_clients`
+--
+
+INSERT INTO `oauth_clients` (`id`, `user_id`, `name`, `secret`, `redirect`, `personal_access_client`, `password_client`, `revoked`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'Laravel Personal Access Client', '5ZSgxY8aIgbufSQ0uaB5x9ocDbLjvRUHipG6qc57', 'http://localhost', 1, 0, 0, '2019-05-17 06:43:16', '2019-05-17 06:43:16'),
+(2, NULL, 'Laravel Password Grant Client', 'OOE6YiTfuWmgz5ruU5jF2eKXkQHXbOO9LwNNCGOj', 'http://localhost', 0, 1, 0, '2019-05-17 06:43:16', '2019-05-17 06:43:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_personal_access_clients`
+--
+
+CREATE TABLE `oauth_personal_access_clients` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `client_id` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `oauth_personal_access_clients`
+--
+
+INSERT INTO `oauth_personal_access_clients` (`id`, `client_id`, `created_at`, `updated_at`) VALUES
+(1, 1, '2019-05-17 06:43:16', '2019-05-17 06:43:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_refresh_tokens`
+--
+
+CREATE TABLE `oauth_refresh_tokens` (
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `access_token_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `oauth_refresh_tokens`
+--
+
+INSERT INTO `oauth_refresh_tokens` (`id`, `access_token_id`, `revoked`, `expires_at`) VALUES
+('6c6941bbcd47e238d67dcd00fbb7a6bda590b914d3a9ff634c40d3b9f43d59b86da47b546433670f', 'f1d1518f1efb815d079af0156492d33dc879f8b8b172cee53f2ccb3f59e23eff78c2e1c12c034d72', 0, '2020-05-17 12:19:10');
 
 -- --------------------------------------------------------
 
@@ -68,6 +180,7 @@ CREATE TABLE `products` (
   `price` int(11) NOT NULL,
   `stock` int(11) NOT NULL,
   `discount` int(11) NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -76,57 +189,37 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `details`, `price`, `stock`, `discount`, `created_at`, `updated_at`) VALUES
-(1, 'Agnes Friesen', 'Pariatur nihil ab eius cupiditate qui dolores. Ut iusto magni sint temporibus sunt eligendi. Facilis laboriosam temporibus dolores suscipit nam. Quia enim et adipisci molestias aut doloribus voluptas nihil.', 894, 0, 28, '2019-05-16 03:11:55', '2019-05-16 03:11:55'),
-(2, 'Eloise McKenzie', 'Minus qui excepturi voluptas quia ad quae. Nihil dolorum fugiat explicabo. In iure sed neque quia deserunt sed. Eum ut ab reprehenderit possimus at tempora accusantium. Esse similique fugiat magni consequatur deserunt ipsa magnam.', 567, 3, 3, '2019-05-16 03:11:55', '2019-05-16 03:11:55'),
-(3, 'Chelsie Moen', 'In voluptatem et ut vel aut. Voluptatem quibusdam totam rerum dignissimos qui cupiditate vel. Et adipisci minus porro. Fuga nihil quo repellat deleniti suscipit aut.', 483, 8, 27, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(4, 'Jordyn Hegmann IV', 'Odio in esse reiciendis laudantium unde repellat id. Velit doloribus et sit aliquid ea. Corrupti occaecati doloribus rerum voluptas omnis ut. Perferendis occaecati velit amet et.', 647, 5, 21, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(5, 'Clarabelle Schimmel', 'Quo inventore et voluptatem. Doloribus provident animi et vel nostrum inventore debitis. Quod ut reiciendis temporibus consequatur officiis sit.', 303, 4, 5, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(6, 'Clotilde Kshlerin Jr.', 'Corrupti incidunt est perspiciatis quae eaque. Rerum numquam itaque fugit incidunt. Ullam blanditiis nesciunt molestiae qui quo voluptas vitae ipsam. Quis temporibus dolores dolor corporis asperiores.', 399, 0, 28, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(7, 'Ayla Fritsch', 'Minus a laudantium voluptatem fugit. Dicta aspernatur aut voluptatum voluptates. Id incidunt culpa suscipit dolorem ipsum eos. Id voluptas eius maiores unde optio.', 256, 6, 19, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(8, 'Dr. Gage Cummerata MD', 'Provident fugit delectus ut temporibus labore sit. Repudiandae nemo sit rerum voluptatem sit quia. Commodi nihil sint quidem laborum aliquam.', 876, 9, 19, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(9, 'Dr. Gilda Stokes', 'Et nulla sit nesciunt eaque nemo. Architecto nihil fugit est et architecto. Autem tempore ab dicta delectus odio dolores pariatur. Corrupti aliquam amet sed et.', 305, 4, 15, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(10, 'Lempi Hand', 'Qui provident impedit commodi optio et omnis illo. Expedita velit eveniet labore enim voluptatem ex eum.', 187, 9, 5, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(11, 'Mr. Sonny Nikolaus PhD', 'Suscipit veniam impedit ut a. Quae eaque minima iure adipisci quia. Quaerat consequatur molestiae corrupti sint quia ab dolor.', 944, 7, 2, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(12, 'Prof. Anahi Fahey', 'Similique quia porro voluptatum odio aut exercitationem. Quia inventore iusto est quia quos quisquam. Veniam ducimus tempore deserunt excepturi omnis quisquam aut.', 974, 2, 24, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(13, 'Sigrid Ebert IV', 'Assumenda saepe dolorem dolores veritatis. Consequatur neque quas voluptates possimus et error laudantium assumenda. Eaque ea ea optio aut maxime velit quidem.', 340, 1, 4, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(14, 'Marquise Rippin', 'Voluptas eum et inventore sunt. Voluptatem rerum iste ipsum ut. Voluptates assumenda et ut. Error architecto assumenda non doloremque aliquam nobis. Ut ut qui quod fuga cum saepe dolorum.', 256, 0, 17, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(15, 'Werner Stamm', 'Aut dolor facilis harum expedita eligendi occaecati laudantium. Nesciunt qui minus quasi praesentium doloremque rerum in. Quia quo nemo dolores repellendus recusandae.', 254, 1, 19, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(16, 'Dr. Mandy Mosciski', 'Molestiae libero fugit inventore quibusdam explicabo quia molestiae. Nemo quia et aut tempora iste nostrum. Voluptas ea quia iste recusandae autem est repellendus velit.', 952, 9, 2, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(17, 'Paula Gislason', 'Cumque voluptates fugit voluptate fugit rerum quia voluptas. Aut fuga consectetur fugiat ullam corporis. Illum a corrupti veniam itaque et rerum. Et magni repellat sint dolores doloribus facilis nihil. Iste quo consectetur omnis delectus vero natus.', 692, 0, 15, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(18, 'Heloise Hudson', 'Qui deserunt veniam tempore enim est aspernatur eos. Itaque sed voluptatum quod perferendis repellat. Non qui soluta at qui. Esse nemo veniam eligendi nisi natus natus.', 367, 8, 27, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(19, 'Ted Hoeger', 'Maxime explicabo aperiam dignissimos quae est. Dicta quo natus sint consequuntur. Incidunt omnis earum maxime dicta velit. Ut tempore non possimus natus voluptatum tempore.', 276, 6, 4, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(20, 'Elsa Koelpin', 'Dignissimos tempore aut rerum ut quos et. Rerum dolorem nemo id. Error asperiores quaerat at accusamus unde ut aut sint. Provident perspiciatis quasi dolorum id.', 593, 4, 12, '2019-05-16 03:11:56', '2019-05-16 03:11:56'),
-(21, 'Zoie Hermiston II', 'Aut blanditiis quia consectetur numquam ut voluptates distinctio. Voluptas voluptas sunt cupiditate dicta rerum minima. Nobis at tenetur corporis quo odio.', 533, 7, 30, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(22, 'Jessika O\'Hara', 'Dicta aut vero quisquam eos voluptatibus at. Delectus aliquam distinctio animi minus deserunt quae. Consequatur iure error in voluptatibus. Quisquam minus sint odio vero molestiae.', 346, 5, 21, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(23, 'Leif Hudson', 'Sed ut est veritatis. Qui voluptas velit animi sint enim tenetur. Quae odio expedita iure libero velit quo dolorum.', 581, 5, 22, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(24, 'Mathias Will PhD', 'Dolorum quia quisquam et voluptatem dolorem. Facere voluptatem omnis vel totam ex quia repudiandae et. Velit qui quo ipsam qui cupiditate magnam.', 345, 2, 10, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(25, 'Myrna Gislason', 'Consequatur aliquam illum dolorem doloribus. Voluptates in et ut praesentium doloremque nostrum. Sequi quia deserunt corrupti odit quaerat possimus a natus.', 647, 6, 26, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(26, 'Prof. Rigoberto Kassulke Sr.', 'Maiores unde fugit ullam ut eos quisquam quasi id. Consequatur non architecto autem quas. Est rem ea aut blanditiis.', 809, 8, 4, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(27, 'Lonny Robel', 'Iusto omnis doloribus alias sequi ut sapiente nemo. Ut vel sed recusandae hic quia deleniti molestiae temporibus. Doloremque eius non itaque provident et et qui.', 370, 7, 9, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(28, 'Mr. Elmer Denesik', 'Nihil voluptates suscipit omnis labore. Illo consequatur rerum sapiente rem.', 762, 5, 2, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(29, 'Coleman Flatley DVM', 'Aut ad sapiente libero consectetur natus. Eius ab aut et fugiat rem.', 703, 0, 16, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(30, 'Alanna Pacocha', 'Doloremque sed esse eum perspiciatis iusto autem itaque. Facilis numquam necessitatibus odit qui reiciendis deserunt rem. Ut sit necessitatibus rerum non. Velit fuga sed est saepe quo.', 771, 8, 4, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(31, 'Dorian Hand', 'Dicta impedit et et quia. Accusamus dolores iure quo incidunt. Ea dolor et tempore sed tempora omnis esse.', 716, 4, 17, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(32, 'Mrs. Sarai Kerluke', 'Est repellat rerum ea doloremque. Pariatur quae porro aut sint. Ea aut odit aut commodi.', 455, 1, 21, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(33, 'Beaulah Hills', 'Corporis blanditiis nemo inventore repudiandae. Aliquid voluptates qui ut autem. Accusantium dolor autem et labore.', 909, 7, 4, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(34, 'Raina West', 'Dolorum exercitationem occaecati sed minima fugit. Aut tenetur qui quidem in. Praesentium adipisci blanditiis est. Possimus hic provident ipsam modi voluptates sequi.', 280, 4, 21, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(35, 'Mr. Jedidiah Schroeder PhD', 'Non sit commodi sit dolor velit sed voluptatem. Cupiditate iure natus non voluptas blanditiis rerum sit. Quo quia perspiciatis eaque aperiam et quia sit officia. Cumque cum eum accusamus iusto.', 905, 2, 29, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(36, 'Mr. Camden Murray I', 'Dolores placeat quo aliquam rem. Adipisci adipisci voluptatem at qui. Sit dicta nesciunt ea in. Rerum magni natus non delectus neque.', 330, 2, 14, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(37, 'Ms. Amaya Auer I', 'Voluptas dicta explicabo delectus est alias. Quod in enim eos. Labore qui culpa pariatur sunt ut. Voluptas quidem occaecati omnis voluptates.', 476, 5, 22, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(38, 'Aletha Yundt', 'Ipsa quia quia dolorem maxime. Et quasi quo perferendis optio. Voluptatem eum illum expedita omnis. Sapiente magnam architecto necessitatibus voluptatem.', 196, 9, 17, '2019-05-16 03:11:57', '2019-05-16 03:11:57'),
-(39, 'Dr. Evelyn Dare Sr.', 'Consequatur necessitatibus consequuntur excepturi voluptates quaerat alias expedita. Modi repellat ut harum reiciendis eaque in tempora. Incidunt accusamus voluptatem esse porro totam eos. Laudantium ratione rerum repudiandae voluptate eius.', 563, 4, 22, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(40, 'Jerrell McGlynn', 'Libero quisquam cupiditate aspernatur qui ea. Dolorem corrupti sunt laborum cupiditate eos quod iusto. Esse expedita et eum velit.', 342, 5, 8, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(41, 'Annabel Leuschke MD', 'Aut laborum blanditiis exercitationem voluptatem. Quis soluta et et et. In facere sit sed sit aperiam at.', 476, 7, 21, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(42, 'Mr. Tom Padberg', 'Dolor enim corporis accusantium maiores impedit facere quaerat. Ullam voluptate provident sapiente minus dolor rerum sit. Sapiente asperiores fuga cumque. Facere ab non ducimus omnis.', 519, 8, 15, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(43, 'Dr. Dariana Rodriguez', 'Porro laudantium quisquam qui dolorem. Et autem adipisci quis id. Optio omnis voluptatem necessitatibus eius dicta.', 348, 0, 25, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(44, 'Dr. Percival Becker IV', 'Voluptatem quaerat ea distinctio rerum earum distinctio. Sint minima et molestias. In impedit consequatur odio maxime. Qui porro qui dolorem.', 673, 4, 16, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(45, 'Ahmed West', 'Qui perferendis rem incidunt distinctio dolore quis dignissimos. Quaerat exercitationem consequatur aut ducimus. Animi ut laudantium excepturi sit et. Magni deserunt amet quia voluptatum esse nesciunt distinctio.', 560, 8, 5, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(46, 'Laurel Murazik', 'Eos quam quo sunt amet et consequatur. Cumque adipisci quibusdam placeat. Dolor eum pariatur accusamus qui reprehenderit recusandae voluptate.', 459, 0, 10, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(47, 'Gladys Ruecker', 'Minima omnis aperiam quae ipsam qui id. Dolor ipsum nulla perferendis rem ad eos. Quas beatae necessitatibus praesentium cumque quasi.', 919, 5, 2, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(48, 'Deangelo Harber', 'Veniam quod suscipit ipsam laudantium doloremque repellat minus. Eius velit quae aperiam illo aut voluptatem. Doloremque impedit qui sit aliquid impedit perferendis rerum. Eos id deserunt illo numquam fugiat dolorem.', 958, 0, 7, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(49, 'Ceasar Russel PhD', 'Itaque tenetur est repellendus tempora est labore. Veritatis veritatis ipsa et veniam possimus illo ratione. Molestiae et veritatis aut culpa atque sit tenetur.', 581, 3, 24, '2019-05-16 03:11:58', '2019-05-16 03:11:58'),
-(50, 'Miss Brooke O\'Hara', 'Quisquam aut enim est est quis. Eos molestiae dignissimos dolorem nostrum.', 291, 9, 17, '2019-05-16 03:11:58', '2019-05-16 03:11:58');
+INSERT INTO `products` (`id`, `name`, `details`, `price`, `stock`, `discount`, `user_id`, `created_at`, `updated_at`) VALUES
+(1, 'Randal Bode', 'wireless charging with new updatedd', 589, 8, 5, 7, '2019-05-17 06:30:17', '2019-05-17 07:17:53'),
+(2, 'Dr. Greta Marquardt I', 'Quia id enim dolor in tempore consequatur. Architecto nam soluta et quia veritatis non aut ut. Suscipit earum nobis tenetur harum. Qui fuga laudantium sequi consequatur vitae.', 241, 6, 28, 7, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(3, 'Shawna Wisozk MD', 'Voluptate qui inventore consequatur et soluta dolorem. Optio iure non dolor est. Est eos voluptatem voluptatem accusamus repellendus ut perferendis eos. Sed aut doloribus rem et voluptatem rerum rerum.', 302, 3, 3, 5, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(4, 'Lisette Emmerich III', 'Voluptatum officiis enim atque fuga omnis qui. Qui et dolorem sunt at expedita. Necessitatibus odio qui similique animi a nihil.', 346, 8, 10, 3, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(5, 'Jocelyn Kunze', 'Odio deserunt aperiam ipsa eum modi odio dicta. Ut dolores illo rerum omnis. Exercitationem totam perferendis est consequatur maiores nobis et. Rerum quisquam recusandae sequi ipsam et iusto.', 673, 8, 6, 4, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(6, 'Regan Grant', 'Et officia nihil amet labore beatae distinctio. Odio quo est libero quia. Officiis fuga non perferendis eum. Nemo adipisci fugiat aspernatur ut.', 249, 5, 29, 1, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(7, 'Eve Nolan', 'Culpa quos eveniet rerum ut ut doloribus. Est mollitia omnis numquam vel commodi necessitatibus rerum. Ut id ut officia corrupti. Voluptatem vel eaque quibusdam doloribus et est.', 530, 4, 23, 5, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(8, 'Chelsey Johnson', 'Voluptatem vel sunt sed commodi. Nihil est quis eum voluptatem veniam. Vel tenetur optio sapiente ut ullam sed rerum assumenda.', 382, 8, 28, 3, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(9, 'Dr. Emile Gleichner DVM', 'Soluta quis non earum. Sed consectetur minus est voluptas occaecati et ullam. Eligendi repellat ea non consequatur molestias quas mollitia.', 457, 8, 14, 3, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(10, 'Mrs. Liliane Lemke', 'Et unde iure sint numquam minus molestiae rem. Ratione amet et veritatis expedita doloremque. Dolores ut similique itaque animi. Magnam voluptatem iusto ab. Ut ipsum nihil expedita et.', 195, 3, 9, 1, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(11, 'Eda Morar', 'Atque enim nemo sequi voluptatem. Voluptate voluptatem eos numquam sit. Quia odio ut rem. Asperiores dolor sit id deserunt sit fugiat delectus.', 653, 9, 10, 2, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(12, 'Mrs. Reina Gleason', 'Voluptatibus architecto est assumenda nisi suscipit deserunt pariatur. Ut asperiores reprehenderit odit magnam nihil. Et fugiat dolores est aut ipsum. Doloribus laborum qui repudiandae autem ea molestiae quisquam. Aut amet earum velit voluptas omnis quo est.', 622, 7, 5, 3, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(13, 'Ernestine Stamm', 'Fugit tenetur architecto dolorem quo reiciendis aliquam cumque. Recusandae molestiae quidem id eveniet deserunt ex nobis. Rerum et blanditiis odio accusantium. Consequuntur omnis est quo ullam qui illum.', 540, 3, 14, 3, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(14, 'Mrs. Opal Mraz DDS', 'Ut explicabo expedita qui autem maiores atque. Dolor illum amet necessitatibus sit sit voluptatum. Doloribus amet sed qui et qui incidunt libero. Aspernatur et omnis id ut ullam iste mollitia.', 606, 4, 18, 1, '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(15, 'Diana Willms', 'Expedita occaecati suscipit aut non perspiciatis alias. Corporis optio vitae voluptas. Nam est quibusdam dolores dolores ex provident. Illum ea dolores maxime cupiditate eaque nesciunt adipisci ducimus.', 286, 4, 14, 4, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(16, 'Van Fadel', 'Magnam qui quo praesentium sed doloremque tempora. Quia ex dolorem ea asperiores. Voluptatibus vitae sint odit nihil itaque facere sapiente et.', 688, 0, 18, 3, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(17, 'Ms. Addison Nitzsche', 'Excepturi error molestiae est alias magnam nihil. Et unde eum esse. Minima distinctio eaque ducimus expedita tempore distinctio harum totam. Nisi esse dicta quasi facilis.', 576, 2, 21, 4, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(18, 'Newton Hayes', 'Ut porro aut adipisci consequatur voluptatem minus sint. Atque perferendis aut molestiae neque.', 497, 2, 28, 4, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(19, 'Shana Kilback', 'Sit qui neque incidunt error est porro consequuntur officia. Dicta sapiente sit quis et est. Quibusdam quibusdam et ipsum explicabo delectus.', 469, 4, 24, 2, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(20, 'Arvilla Mayer', 'Minima maiores laboriosam est soluta voluptas fugiat est. Vero voluptas autem qui nostrum. Maiores molestiae accusantium assumenda consequatur sed et consequatur. Voluptatibus laborum quia facilis deleniti ratione libero.', 523, 4, 25, 4, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(21, 'Dr. Tiana Nolan DVM', 'Culpa repellendus qui accusamus ducimus repellat placeat. Dignissimos perferendis quia voluptate vel qui est.', 270, 5, 5, 2, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(22, 'Jerel Ledner', 'Facilis saepe qui rerum delectus corporis exercitationem. Voluptas quam quae aperiam natus ut et. Dolor ex excepturi error voluptatem.', 575, 5, 2, 5, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(23, 'Domenica Farrell', 'Deserunt dolor sit sit expedita molestias fugit id. Ut nihil quisquam dolorem nobis nobis accusamus. Qui animi ipsa unde nobis nam veritatis.', 904, 5, 27, 5, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(24, 'Garrison Waters', 'Laborum iusto sed nostrum culpa tempora. Consequatur ratione consequuntur ut eos accusamus pariatur sapiente delectus. Quo illo quia et. Fugit autem possimus et dolorum facilis cumque voluptatum.', 858, 0, 9, 4, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(25, 'Milton Kerluke IV', 'Et et aut quas expedita. Repellat aut quo quod reiciendis id vero. Tempora voluptas dolor occaecati in rerum.', 841, 4, 20, 2, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(26, 'Sedrick Waters', 'Eius voluptate in dolores a provident impedit minus. Nemo quas qui asperiores itaque. Iusto eligendi praesentium ipsa suscipit aut. Et itaque aliquam eos nobis rerum amet eius eius.', 491, 9, 14, 3, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(27, 'Norris Cummings', 'Sit praesentium quidem modi mollitia. Doloribus eveniet sunt voluptas sit doloribus voluptatem. Dolore impedit dolores et dolores unde et enim. A quibusdam ut explicabo voluptas.', 233, 0, 3, 5, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(28, 'Ms. Lisa Strosin V', 'Asperiores consequatur in fuga consequuntur officia quia. Rerum soluta delectus aut rerum et voluptate. Temporibus enim aspernatur maiores et. Explicabo nam ipsa in quos dolores.', 562, 5, 18, 4, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(29, 'Thalia Stoltenberg PhD', 'Velit neque aut laudantium quae. Doloribus ut ratione voluptas libero ad. Dolorem ut odio aliquid quo ratione. Eum nisi quidem sint.', 872, 1, 29, 4, '2019-05-17 06:30:18', '2019-05-17 06:30:18'),
+(30, 'Archibald Yundt', 'Consequatur voluptatem earum natus nihil. Totam vel aperiam voluptates esse reprehenderit. Nemo tempore placeat laboriosam aut ut quia.', 457, 0, 8, 1, '2019-05-17 06:30:19', '2019-05-17 06:30:19');
 
 -- --------------------------------------------------------
 
@@ -149,56 +242,36 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `product_id`, `customer`, `review`, `star`, `created_at`, `updated_at`) VALUES
-(1, 4, 'Lawrence Mayert', 'Voluptas sint numquam totam nostrum molestiae. Quas cupiditate porro et officiis. Nulla reprehenderit accusamus aut unde vero mollitia. Consequuntur distinctio in neque sunt quia omnis tenetur temporibus.', 0, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(2, 44, 'Mrs. Jailyn Rath', 'Occaecati aliquam dolore quia suscipit eaque eius autem. Mollitia aut et rerum asperiores officiis est. Unde a mollitia ab cumque facilis. Consequuntur amet omnis voluptatibus minus expedita velit ipsam.', 4, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(3, 29, 'Prof. Lenora Terry', 'Qui asperiores rem quisquam illum maiores repellat odio. Qui sed minima ipsam. Nam eos ut alias modi sed aperiam reiciendis ut.', 3, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(4, 7, 'Prof. Lexie Schiller', 'Ipsum nihil fugiat ut officiis. Sit omnis corporis et quo. Asperiores perspiciatis officiis magnam.', 4, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(5, 37, 'Alphonso Doyle', 'Et cumque qui quam aperiam quis laboriosam rerum odio. Optio voluptatem et non est. Sed esse et quo ut qui.', 4, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(6, 4, 'Mrs. Destini Berge', 'Quis quaerat eius voluptatem est debitis est. Qui pariatur cupiditate tempore fugit quisquam quisquam repudiandae. Beatae hic velit vero reiciendis non ab ratione. Dolor fugit sapiente ea dignissimos animi quaerat.', 1, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(7, 27, 'Christop Larson', 'Nesciunt odio laborum fugit aut. Quae iure temporibus vero veniam. Corrupti ab est ab. Aut ex ut sunt et ipsum.', 0, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(8, 21, 'Ms. Sarah Schamberger PhD', 'Sit consequatur quod totam reprehenderit. Libero sint rerum aut aliquid distinctio sint doloribus modi. Aut vitae repudiandae dolorum atque occaecati. Sequi illo sit et assumenda laborum odit quam.', 1, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(9, 18, 'Jerel Maggio', 'Neque veritatis et qui qui sunt. Quia quibusdam ea praesentium est minus reprehenderit. Voluptatem est quia molestiae quia culpa accusamus. Rerum autem dignissimos nihil inventore voluptatem. Voluptate officiis ipsa est et cumque consectetur.', 3, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(10, 13, 'Marcos Block', 'Totam eveniet occaecati et perferendis consequuntur consequuntur nisi. Velit aut quo fugiat delectus magnam qui. Quis ullam dolorum omnis vel. Cum nulla tempora quas reiciendis laudantium ratione et autem. Quae repellat suscipit magni sunt modi est quia nam.', 2, '2019-05-16 03:14:41', '2019-05-16 03:14:41'),
-(11, 26, 'Willie Dare', 'Fugit ipsum adipisci aliquam est non amet vel similique. Deserunt ut commodi enim. Optio consequatur accusantium aut iure.', 0, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(12, 28, 'Cordia Bayer', 'Consequuntur commodi rem dignissimos officiis quia qui. Sapiente aut repellendus ut ut quia sed. Quisquam odit quia ratione et iusto. Ut temporibus pariatur fuga quo.', 3, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(13, 11, 'Prof. Duncan Klein', 'Quia et animi autem sed quo. Dolorem et vitae qui voluptatem.', 3, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(14, 1, 'Javon Hintz', 'Consequatur dolor enim odio sit eligendi est. Consectetur voluptatem aliquam facere atque. Quae eius repellat quos vero. Id rerum voluptatem eaque sequi vel totam. Pariatur quia esse id itaque voluptatem.', 3, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(15, 8, 'Stephanie Glover', 'Voluptatibus officia quas sed. Nemo dolorem consequuntur non dolorem.', 3, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(16, 48, 'Deja Dickens PhD', 'Qui ut dolor tempore porro. Ratione voluptates molestiae vero dolorem in. Dolorem aut sequi ab.', 0, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(17, 37, 'Vella Mosciski', 'Nisi minima voluptatibus natus quia. Atque mollitia molestias maiores incidunt ut similique. Consequuntur ut qui et.', 2, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(18, 33, 'Dr. Tate Reichert III', 'Et voluptatem aut libero ullam. Eum ut expedita dolorum veritatis aut voluptates deserunt. Ad iste atque fugit laborum dolorem. Animi impedit aut tempora quod voluptatem.', 3, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(19, 38, 'Antonette Hodkiewicz', 'Et consequatur est autem dicta. Aut vel accusamus quis eum velit. Nihil tempore sequi ut eum.', 2, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(20, 48, 'Daija Hagenes', 'Et et voluptas magnam ipsam veritatis neque incidunt amet. Pariatur unde porro ea. Possimus quis suscipit possimus ut.', 3, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(21, 9, 'Jonas Emard Jr.', 'Minima sit reprehenderit suscipit aut. Quia iusto minima labore molestias officiis totam occaecati ut. Facere natus sunt delectus.', 5, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(22, 36, 'Mr. Oran Blick PhD', 'Aut reprehenderit vero quia dolorum amet asperiores neque. Nihil veniam minima quaerat nostrum omnis. Libero rerum ducimus temporibus quia.', 2, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(23, 1, 'Prof. Dahlia Rohan', 'Modi facere harum qui occaecati ut nihil. Libero aut illo reiciendis corporis.', 4, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(24, 35, 'Tony Williamson', 'Rerum qui et tenetur sequi aperiam explicabo. Rerum nobis sed ut voluptas hic et atque. Aliquid suscipit et sunt magnam nulla dolor. Quis excepturi ut corporis nobis eligendi ipsam est.', 2, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(25, 14, 'Meda Bosco I', 'Animi sit ut quo quam voluptatem illum et. Non dolore provident officiis. Nemo nobis inventore hic nihil quibusdam et minus sit. Ipsa ea qui totam. Non illo unde minima adipisci debitis nulla.', 3, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(26, 33, 'Wilma Johnston', 'Dolores velit distinctio soluta nam dolores ut fugiat. Labore commodi natus et illo omnis. Modi quos vel hic sed molestias mollitia. Cum quia qui odit.', 2, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(27, 20, 'Leland Homenick III', 'Eum et aut possimus. Nihil itaque dolores corporis corporis modi. Beatae consequatur officia ab et dolorem. Ipsa velit quis quia natus corporis nobis voluptatem. Illum sed id ut odit suscipit.', 2, '2019-05-16 03:14:42', '2019-05-16 03:14:42'),
-(28, 28, 'Mac Bruen', 'Voluptas modi est cumque consequatur. Voluptatem dolor beatae asperiores voluptate ut qui possimus. In harum ullam ratione nam. Voluptate aut minima eius voluptatem dolorum labore vitae.', 0, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(29, 46, 'Mittie Morissette', 'Pariatur fugiat suscipit aut. Dolorem veniam eveniet eveniet. Qui voluptatem officia quod nihil. Quidem voluptas in sunt possimus.', 3, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(30, 27, 'Evangeline Mertz V', 'Et autem culpa repellendus sapiente aliquam voluptas explicabo. Provident optio et occaecati. Possimus vero id quasi aut beatae aut odit. Corrupti nobis quia recusandae et.', 2, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(31, 24, 'Dr. Cleora Collins', 'Nulla eveniet cum magni et nulla. In eos quis fuga. Amet et fugiat vero vel necessitatibus sed et error. Consequatur omnis ut animi dignissimos voluptatem necessitatibus.', 3, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(32, 48, 'Mrs. Ally Balistreri III', 'Dolores totam odit nemo deleniti facere. Occaecati dolor asperiores quia autem exercitationem. Nesciunt maxime optio ducimus veniam sint.', 1, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(33, 7, 'Nakia Rath', 'Non debitis quidem aperiam. Consequuntur aliquid illum quae qui sed. Consequatur unde voluptatem voluptatum sed quam exercitationem. Dolorem odit provident aliquid ratione doloremque voluptatem.', 5, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(34, 17, 'Adelia Monahan', 'Temporibus fugiat eligendi voluptatem voluptas ex vero qui. Numquam ratione maxime beatae magni non eos fugit qui. Exercitationem nostrum illo debitis delectus molestiae.', 5, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(35, 12, 'Prof. Vella Koss', 'Quia repudiandae sapiente corporis et sunt quibusdam. Voluptates dolorem et et sed doloribus.', 1, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(36, 28, 'Prof. Kip Waelchi', 'Quis ut hic harum eius. Fugiat tempora dolor deleniti necessitatibus et debitis. Rerum eos non dolorem enim dignissimos architecto consequatur omnis.', 5, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(37, 14, 'Virgie Runte III', 'Tenetur sunt aspernatur esse soluta. Veniam odit recusandae et.', 5, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(38, 4, 'Prof. Orrin Kub PhD', 'Velit quis qui quia ea consequatur. Ipsam beatae quo illum sunt delectus numquam iure. Animi dolorem nobis similique dolore numquam error repellendus quia.', 5, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(39, 23, 'Zechariah Williamson DDS', 'Et et omnis et. Quae nemo harum sit consequatur et dolorem. Aut quia nam ex voluptas culpa. Officiis eum amet occaecati incidunt iusto magnam qui.', 4, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(40, 15, 'Prof. Sedrick Mitchell', 'Iste repellendus odio quasi sed qui consequatur esse. Voluptatem neque ut veritatis cumque enim in doloribus. Nisi iusto commodi amet quia.', 2, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(41, 42, 'Rollin Wehner', 'Quod quae architecto dolor quidem. Reprehenderit fugiat veniam eum quia et. Quia officiis repellendus incidunt. Sit ipsum molestiae saepe soluta laudantium repellendus.', 5, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(42, 3, 'Mr. Cory Jones', 'Exercitationem officia velit id nulla quaerat. Sed atque non est dolorum illum. Et molestiae at qui ut.', 3, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(43, 23, 'Darian Schamberger', 'Distinctio qui sed est expedita. Beatae ut omnis et sapiente consectetur vitae qui laboriosam. Quia et facere saepe sapiente.', 0, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(44, 46, 'Miss Darlene Bode DVM', 'Optio quod praesentium distinctio est odit. Sit sunt pariatur excepturi eos. Dicta est consequatur impedit laboriosam reiciendis error. Vel ut in aut blanditiis minima mollitia rerum. Consequatur tempore aut voluptatibus non itaque deleniti.', 5, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(45, 32, 'Dr. Rupert Feest Sr.', 'Nesciunt ad perspiciatis velit blanditiis id. Accusantium numquam delectus eveniet laboriosam consectetur. Dolorem quasi quasi non excepturi exercitationem labore. Blanditiis deleniti eveniet vitae voluptatibus est ipsum.', 1, '2019-05-16 03:14:43', '2019-05-16 03:14:43'),
-(46, 39, 'Prof. Griffin Nienow II', 'Aut accusamus asperiores recusandae adipisci excepturi omnis. Libero reprehenderit adipisci atque exercitationem numquam sunt. Consequatur inventore eaque quibusdam eveniet tempore molestiae et. Qui veniam rem nihil aut maxime sunt quidem.', 3, '2019-05-16 03:14:44', '2019-05-16 03:14:44'),
-(47, 24, 'Dena Gutmann', 'Voluptatem maiores inventore voluptatibus quas suscipit. Debitis aliquam harum quo non eligendi. Expedita voluptatibus sint deleniti repudiandae expedita. Odit expedita molestias quo sit. Voluptatibus fuga perspiciatis autem et doloribus minus.', 5, '2019-05-16 03:14:44', '2019-05-16 03:14:44'),
-(48, 9, 'Sage Barrows', 'Mollitia voluptatem omnis qui quo illum porro quasi. Adipisci possimus autem est necessitatibus et corporis commodi. Doloremque eum expedita nihil. Ut quis voluptas explicabo et ut odio.', 4, '2019-05-16 03:14:44', '2019-05-16 03:14:44'),
-(49, 29, 'Elise Franecki', 'Omnis veniam quidem a perferendis saepe odit quibusdam. Aut enim enim in blanditiis totam occaecati. Accusantium laboriosam iste saepe eum voluptatibus. Deleniti facilis non repellat repellat possimus ex. Culpa consectetur et ex debitis.', 3, '2019-05-16 03:14:44', '2019-05-16 03:14:44'),
-(50, 31, 'Laurianne Bechtelar', 'Quia maxime voluptatem soluta distinctio a corrupti. Quisquam omnis ad nisi sed eos iste illum. Reiciendis est et nulla et consectetur.', 2, '2019-05-16 03:14:44', '2019-05-16 03:14:44');
+(1, 23, 'Antone Rosenbaum', 'Optio sunt odit quam velit vel voluptatem veniam. Fugit nesciunt placeat quis non harum qui error. Aperiam vel commodi numquam laudantium qui quia libero.', 4, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(2, 27, 'Hollis Lubowitz', 'Sequi qui sit non sit. Neque corporis quibusdam rerum itaque et nulla molestiae. Omnis rerum vel sit et sit aut ut.', 5, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(3, 6, 'Dr. Yoshiko Hartmann III', 'Sequi in qui et natus voluptas repudiandae velit. Consequuntur consequatur rerum magnam deleniti. Voluptates consequatur et sunt quaerat corporis fuga voluptatem. Laboriosam eligendi esse et vel non tempora praesentium.', 0, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(4, 17, 'Alfreda Koelpin', 'Sint eligendi fugiat enim eum quo. Aliquid aut adipisci dolorem doloremque. Ut inventore quas sed eaque veritatis amet velit. Soluta vero porro voluptas cum deleniti accusamus.', 0, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(5, 4, 'Werner Lehner', 'Ex facere hic et amet voluptatem voluptatibus maiores. Voluptas sit delectus totam quo sed adipisci suscipit. Quia tempora ut corporis omnis eligendi qui. Voluptatum repellendus voluptatem sunt sit et rerum.', 2, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(6, 1, 'Miss Shemar Lockman', 'Nobis iusto et sint illo nam ipsa pariatur. Reprehenderit modi dolorem earum sed ab. Repellat quo qui enim quia maxime. Eos temporibus minima id et expedita est quia qui.', 5, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(7, 30, 'Florine Toy', 'Et corrupti facilis doloribus quis. A aut blanditiis cumque suscipit. Nesciunt dolorem accusantium dolor asperiores.', 3, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(8, 29, 'Erica Torphy', 'Dolorem temporibus molestiae esse earum doloribus vel. Sit aut laboriosam et non et. Consequuntur est aperiam id nulla aliquam.', 4, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(9, 23, 'Jewel Zemlak IV', 'Earum tenetur tempore illum. Mollitia et molestiae esse est nihil quam. Sunt possimus molestiae saepe id assumenda laboriosam minus minima.', 5, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(10, 9, 'Dorcas Ruecker PhD', 'Nisi eos molestias distinctio voluptatum. Repudiandae sequi dolor dicta ullam. Sint cum molestias id pariatur sapiente.', 1, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(11, 26, 'Chad Jaskolski', 'Ipsa maxime sint non assumenda asperiores. Aut sed ipsum praesentium esse dicta maiores. Vel qui amet consectetur natus. Nihil adipisci delectus sed non corporis.', 5, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(12, 30, 'Lance Eichmann', 'Est dolorem tenetur incidunt dolor. Laboriosam consectetur amet illum sequi voluptatem nostrum beatae ipsa. Mollitia repudiandae et excepturi quaerat unde sit.', 0, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(13, 5, 'Lindsay O\'Kon', 'Aut aut delectus atque voluptates sequi incidunt id. Debitis sed quod laudantium sit dolore cum et eum. Rem aut similique debitis fuga nisi explicabo recusandae. Blanditiis aperiam reiciendis quis dolorem ratione ut et voluptatibus. Porro iure ipsum perferendis ipsam ea consequatur voluptate.', 1, '2019-05-17 06:30:19', '2019-05-17 06:30:19'),
+(14, 20, 'Gino Weissnat', 'Adipisci impedit necessitatibus corrupti qui aut. Nihil sit amet nostrum fugit. Unde temporibus ullam accusamus eligendi temporibus. Vitae deleniti numquam accusantium necessitatibus. Qui non quae voluptatem corporis laboriosam voluptas fuga.', 1, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(15, 18, 'Stuart Treutel', 'Et voluptas blanditiis quae magni vitae. Expedita ipsa ex omnis et porro. Aut voluptatum molestiae at libero dignissimos ea. Impedit est quia dolores et eos voluptas quia blanditiis.', 2, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(16, 20, 'Carlie Greenholt I', 'Facilis neque ut exercitationem repellendus consequatur nam. Quia provident laboriosam et et. Dolor reiciendis maiores ratione fugit minima sequi.', 3, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(17, 3, 'Prof. Christopher Dicki DVM', 'Est fuga et ad. Rerum sit temporibus incidunt. Unde est consectetur porro debitis molestiae. Velit commodi autem nisi quis molestiae. Dolorum autem corporis adipisci eligendi consequatur illo sed facere.', 2, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(18, 14, 'Tanya Vandervort II', 'Quod vitae dolorem vitae quia iusto iusto est. Architecto fugiat quisquam ea quia tempora maxime.', 0, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(19, 21, 'Mr. Jennings Pfannerstill', 'Cum accusamus delectus quia voluptatem temporibus aut. Mollitia sit ducimus sequi. Et suscipit ut dolorem eligendi modi minus. Voluptatem suscipit nihil ea esse.', 3, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(20, 29, 'Ahmad Lowe', 'Non dignissimos adipisci voluptatem enim quod maxime fugiat perferendis. Eos a doloremque doloribus est fugiat officiis consequatur quo. Voluptatem aut nostrum voluptas omnis. Sit sit facilis sed quod sit.', 4, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(21, 7, 'Shaina Conroy', 'Perferendis adipisci libero impedit pariatur asperiores delectus et eligendi. Minus vero delectus numquam temporibus sunt. Et voluptas distinctio vel. Possimus quia aut minus quod enim iusto tempora.', 4, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(22, 28, 'Dr. Murphy Herman III', 'Possimus voluptatem tenetur molestiae sunt ipsa vel eos. Nostrum pariatur iure voluptatem repellendus eius asperiores. Vitae odit dignissimos ratione ut itaque blanditiis nihil. Et excepturi aperiam placeat sunt.', 0, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(23, 23, 'Kristy Erdman I', 'Dicta laudantium rerum voluptatem quo incidunt magni. Minus est ea illum delectus tempora maxime officia. Et sunt et blanditiis. Quae aut culpa inventore doloremque quia dolor.', 4, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(24, 6, 'Dr. Geo Langosh', 'Magnam nihil similique in sapiente asperiores. Quo eos eos dolor facere dolores non. Quae eaque harum quae aut non aut earum. Et in doloribus asperiores facilis voluptatem dolorum similique.', 1, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(25, 8, 'Beau Beahan', 'Nam nulla quia rerum dolorem. Molestias sint asperiores aliquid tempore dolor vel ullam. Praesentium aut dolore ut nobis hic.', 5, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(26, 7, 'Alexane Windler', 'Ipsum ut velit alias. Vel provident saepe fugiat vel laudantium minus incidunt. Ut iste magnam ea et ratione numquam. Praesentium quae est libero et.', 2, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(27, 16, 'Janiya Boyle', 'Rerum et nihil molestiae culpa impedit. Quia voluptate deleniti non. Atque facilis alias qui consequatur quis. Dolorem aspernatur deleniti nobis fugit possimus ea voluptatum.', 0, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(28, 17, 'Prof. Mertie Schuppe III', 'Et exercitationem dolor blanditiis et voluptatem officiis ratione et. Nisi laboriosam qui qui beatae quas temporibus. Vero quos mollitia eum commodi.', 1, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(29, 8, 'Miss Madge Pacocha V', 'Aut amet fugiat consequuntur quos. Autem voluptatum rerum ipsam ut. Architecto quis error expedita ut earum.', 1, '2019-05-17 06:30:20', '2019-05-17 06:30:20'),
+(30, 2, 'Margarette Osinski', 'Quidem animi quasi pariatur maiores tempora quo temporibus est. Tempora voluptas neque dolore libero. Omnis in atque sed veniam eum corporis. Quia sequi assumenda libero sit cupiditate.', 4, '2019-05-17 06:30:20', '2019-05-17 06:30:20');
 
 -- --------------------------------------------------------
 
@@ -218,6 +291,18 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Golda Hahn', 'ulehner@example.com', '2019-05-17 06:30:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '9Q0NzaWLePZyaMVSThgnDmBTTZI8qN0ZMZYihAOWVj0PoFNR3j8wAmx5TMPR', '2019-05-17 06:30:16', '2019-05-17 06:30:16'),
+(2, 'Marilie Herman', 'runolfsson.shanna@example.com', '2019-05-17 06:30:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'NZ454RnMrw', '2019-05-17 06:30:16', '2019-05-17 06:30:16'),
+(3, 'Ms. Keara Blanda MD', 'yundt.noelia@example.net', '2019-05-17 06:30:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'IRdugRaIsy', '2019-05-17 06:30:16', '2019-05-17 06:30:16'),
+(4, 'Armando Howell Jr.', 'arely.wiegand@example.net', '2019-05-17 06:30:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tBb2hKYYEN', '2019-05-17 06:30:16', '2019-05-17 06:30:16'),
+(5, 'Mr. Bartholome McKenzie IV', 'grimes.cheyanne@example.org', '2019-05-17 06:30:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '43cyhCqavM', '2019-05-17 06:30:17', '2019-05-17 06:30:17'),
+(7, 'Rupam', 'rupam@cybertrontechnologies.com', NULL, '$2y$10$eIFpMUmNIpfFPRAlm8yJl.XhllnXUNwxnUe5DD2MymbIoKLxbk5Qa', NULL, '2019-05-17 06:48:27', '2019-05-17 06:48:27');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -226,6 +311,40 @@ CREATE TABLE `users` (
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `oauth_access_tokens`
+--
+ALTER TABLE `oauth_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oauth_access_tokens_user_id_index` (`user_id`);
+
+--
+-- Indexes for table `oauth_auth_codes`
+--
+ALTER TABLE `oauth_auth_codes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `oauth_clients`
+--
+ALTER TABLE `oauth_clients`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oauth_clients_user_id_index` (`user_id`);
+
+--
+-- Indexes for table `oauth_personal_access_clients`
+--
+ALTER TABLE `oauth_personal_access_clients`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oauth_personal_access_clients_client_id_index` (`client_id`);
+
+--
+-- Indexes for table `oauth_refresh_tokens`
+--
+ALTER TABLE `oauth_refresh_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oauth_refresh_tokens_access_token_id_index` (`access_token_id`);
 
 --
 -- Indexes for table `password_resets`
@@ -237,7 +356,8 @@ ALTER TABLE `password_resets`
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `products_user_id_index` (`user_id`);
 
 --
 -- Indexes for table `reviews`
@@ -260,25 +380,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `oauth_clients`
+--
+ALTER TABLE `oauth_clients`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `oauth_personal_access_clients`
+--
+ALTER TABLE `oauth_personal_access_clients`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
